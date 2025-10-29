@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-05
+  namespace: dev
+spec:
+  containers:
+    - name: nginx-01
+      image: nginx
+      resources:
+        requests:
+          cpu: "100m"
+          memory: "800Mi"
+        limits:
+          cpu: "200m"
+          memory: "900Mi"

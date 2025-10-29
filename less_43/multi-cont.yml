@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: multi-conts-pod
+  labels:
+    app: multi-conts
+spec:
+  containers:
+    - name: demo
+      image: anestesia01/k8s-demo:base
+    - name: db
+      image: postgres
+      env:
+        - name: POSTGRES_PASSWORD
+          value: pgpass
+      ports:
+        - containerPort: 5432
