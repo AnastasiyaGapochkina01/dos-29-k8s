@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: greet-dpl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: greet-stack
+  template:
+    metadata:
+      labels:
+        app: greet-stack
+    spec:
+      containers:
+      - name: greet
+        image: anestesia01/k8s-demo:greet-app-2.0.0
+        env:
+        - name: GREETING
+          valueFrom:
+            configMapKeyRef:
+              name: greet-conf
+              key: GREETING
+        - name: APP_VERSION
+          valueFrom:
+            configMapKeyRef:
+              name: greet-conf
+              key: APP_VERSION
+        ports:
+        - containerPort: 8000
+      - name: greet-proxy
+        image: nginx
+        ports:
+          - containerPort: 80
+        volumeMounts:
+        - name: nginx-conf-vol
+          mountPath: /etc/nginx/conf.d/default.conf
+          subPath: default.conf
+      volumes:
+      - name: nginx-conf-vol
+        configMap:
+          name: nginx-conf

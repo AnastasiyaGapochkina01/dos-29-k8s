@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: time-app-dpl
+  labels:
+    app: time
+  annotations:
+    kubernetes.io/change-cause: "Set version 2.0.0."
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: "20%"
+      maxUnavailable: "10%"
+  selector:
+    matchLabels:
+      env: demo
+  template:
+    metadata:
+      labels:
+        env: demo
+    spec:
+      containers:
+      - name: time-app
+        image: anestesia01/k8s-demo:time-app-2.0.0
+        ports:
+          - containerPort: 8000

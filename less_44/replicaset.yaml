@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: time-app
+  labels:
+    app: time
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      role: backend
+  template:
+    metadata:
+      labels:
+        role: backend
+    spec:
+      containers:
+      - name: time-app
+        image: anestesia01/k8s-demo:time-app-2.0.0
+        ports:
+          - containerPort: 8000
