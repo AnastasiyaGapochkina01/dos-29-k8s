@@ -42,14 +42,14 @@ pipeline {
       }
     }
 
-    stage('Prepare credentials'){
+    stage('Prepare Credentials') {
       steps {
-        withCredentials([sshUserPrivateKey(credentialsId: 'worker-02', keyFileVariable: 'private_key', usernameVariable: 'username')]) {
+        withCredentials([sshUserPrivateKey(credentialsId: 'worker-02', usernameVariable: 'username', keyFileVariable: 'private_key')]) {
           script {
             remote.name = "${env.HOST}"
             remote.host = "${env.HOST}"
-            remote.name = "$username"
-            remote.identity = readFile "$private_key"
+            remote.user = "${username}"
+            remote.identity = readFile "${private_key}"
             remote.allowAnyHosts = true
           }
         }
