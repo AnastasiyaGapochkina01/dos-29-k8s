@@ -1,0 +1,42 @@
+pipeline {
+  agent { label 'docker' }
+  parameters {
+    gitParameter(type: 'PT_BRANCH', name: 'BRANCH', branchFilter: 'origin/(.*)', defaultValue: 'main', selectedValue: 'DEFAULT')
+  }
+
+  environment {
+    DOCKER_REPO="anestesia01/jenkins-filiz"
+    DOCKER_TOKEN=credentials('docker_repo_token')
+    GIT_URL="git@github.com:AnastasiyaGapochkina01/dos-29-k8s.git"
+    PRJ_NAME="time-app"
+  }
+
+  stages {
+    stage('Checkout') {
+      steps {
+        git branch: "${params.BRANCH}", url: "{env.GIT_URL}"
+      }
+    }
+
+    stage('Build image') {
+      steps {
+        script {
+          sh """
+            docker build -t "${env.DOCKER_REPO}:${env.PRJ_NAME}-${BUILD_NUMBER}" ./
+          """
+        }
+      }
+    }
+
+    stage('Push image') {
+      steps {
+        script {
+          sh """
+            docker login -u anestesia01 -p "${env.DOCKER_TOKEN}"
+            docker push "${env.DOCKER_REPO}:${env.PRJ_NAME}-${BUILD_NUMBER}"
+          """
+        }
+      }
+    }
+  }
+}
