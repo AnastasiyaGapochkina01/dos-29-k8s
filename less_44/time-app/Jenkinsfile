@@ -1,3 +1,5 @@
+def remote = [:]
+
 pipeline {
   agent { label 'docker' }
   parameters {
@@ -9,6 +11,7 @@ pipeline {
     DOCKER_TOKEN=credentials('docker_repo_token')
     GIT_URL="git@github.com:AnastasiyaGapochkina01/dos-29-k8s.git"
     PRJ_NAME="time-app"
+    HOST="89.169.169.167"
   }
 
   stages {
@@ -34,6 +37,33 @@ pipeline {
           sh """
             docker login -u anestesia01 -p "${env.DOCKER_TOKEN}"
             docker push "${env.DOCKER_REPO}:${env.PRJ_NAME}-${BUILD_NUMBER}"
+          """
+        }
+      }
+    }
+
+    stage('Prepare credentials'){
+      steps {
+        withCredentials([sshUserPrivateKey(credentialsId: 'worker-02', keyFileVariable: 'private_key', usernameVariable: 'username')]) {
+          script {
+            remote.name = "${env.HOST}"
+            remote.host = "{env.HOST}"
+            remote.name = "$username"
+            remote.identity = readFile "$private_key"
+            remote.allowAnyHosts = true
+          }
+        }
+      }
+    }
+
+    stage('Deploy') {
+      steps {
+        script {
+          sshCommand remote: remote, command: """
+            docker pull "${env.DOCKER_REPO}:${env.PRJ_NAME}-${BUILD_NUMBER}"
+            docker stop "${env.PRJ_NAME}" || true
+            docker rm "${env.PRJ_NAME}" || true
+            docker run -d -it --name "${env.PRJ_NAME}" "${env.DOCKER_REPO}:${env.PRJ_NAME}-${BUILD_NUMBER}"
           """
         }
       }
