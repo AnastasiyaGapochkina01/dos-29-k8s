@@ -22,7 +22,7 @@ pipeline {
       steps {
         script {
           sh """
-            docker build -t "${env.DOCKER_REPO}:${env.PRJ_NAME}-${BUILD_NUMBER}" ./
+            docker build -t "${env.DOCKER_REPO}:${env.PRJ_NAME}-${BUILD_NUMBER}" ./less_44/time-app
           """
         }
       }
