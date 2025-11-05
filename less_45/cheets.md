@@ -1,3 +1,38 @@
+## Taint
+```bash
+kubectl taint nodes worker-node-02 run=false:NoSchedule
+kubectl describe node worker-node-02 | grep -A4 Taints
+```
+
+```yaml
+---
+# no toleration pod
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ordinary-pod
+spec:
+  containers:
+    - name: nginx
+      image: nginx:latest
+      
+---
+# toleration pod
+apiVersion: v1
+kind: Pod
+metadata:
+  name: toleration-pod
+spec:
+  containers:
+    - name: nginx
+      image: nginx:latest
+  tolerations:
+    - key: "run"
+      operator: "Equal"
+      value: "false"
+      effect: "NoSchedule"
+```
+
 ## RBAC
 ```bash
 openssl genrsa -out developer.key 2048
