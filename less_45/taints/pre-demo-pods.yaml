@@ -1,0 +1,21 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ordinary-pod
+  namespace: taints-demo
+spec:
+  containers:
+    - name: nginx
+      image: nginx:latest
+      
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: toleration-pod
+  namespace: taints-demo
+spec:
+  containers:
+    - name: nginx
+      image: nginx:latest

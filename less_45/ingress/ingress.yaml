@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: k8s.dos-29.anestesia.fun
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: proxy-service
+            port:
+              number: 80 

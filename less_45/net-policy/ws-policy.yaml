@@ -1,0 +1,15 @@
+apiVersion: crd.projectcalico.org/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-ws-from-admin
+  namespace: net-demo
+spec:
+  selector: app == 'ws'
+  ingress:
+  - action: Allow
+    protocol: TCP
+    source:
+      selector: role == 'admin'
+    destination:
+      ports:
+        - 80

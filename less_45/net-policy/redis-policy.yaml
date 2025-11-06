@@ -1,0 +1,15 @@
+apiVersion: crd.projectcalico.org/v1
+kind: NetworkPolicy
+metadata:
+  name: deny-access-redis
+  namespace: net-demo
+spec:
+  selector: app == 'redis'
+  ingress:
+  - action: Deny
+    protocol: TCP
+    destination:
+      ports:
+        - 6379
+  egress:
+  - action: Deny

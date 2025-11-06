@@ -1,0 +1,32 @@
+---
+# no toleration pod
+apiVersion: v1
+kind: Pod
+metadata:
+  name: simple-pod
+  labels:
+    type: notolerate
+  namespace: taints-demo 
+spec:
+  containers:
+    - name: nginx
+      image: nginx:latest
+      
+---
+# toleration pod
+apiVersion: v1
+kind: Pod
+metadata:
+  name: daring-pod
+  labels:
+    type: tolerate
+  namespace: taints-demo
+spec:
+  containers:
+    - name: nginx
+      image: nginx:latest
+  tolerations:
+    - key: "run"
+      operator: "Equal"
+      value: "false"
+      effect: "NoSchedule"
