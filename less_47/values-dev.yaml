@@ -1,0 +1,8 @@
+namespace: metrics-dev
+app:
+  replicas: 1
+
+db:
+  user: metricsdev
+  password: metricspassworddev
+  name: metricsdevdb

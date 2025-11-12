@@ -2,8 +2,8 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: postgres
-  namespace: $NS
+  name: postgres-statefulset
+  namespace: job-demo
 spec:
   selector:
     matchLabels:
@@ -33,7 +33,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: postgres-service
-  namespace: $NS
+  namespace: job-demo
 spec:
   type: ClusterIP
   ports:

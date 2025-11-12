@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "app.deploymentName" . }}
+  namespace: {{ .Values.namespace | default "default" }}
+spec:
+  replicas: {{ .Values.app.replicas }}
+  selector:
+    matchLabels:
+      app: {{ include "app.fullname" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "app.fullname" . }}
+    spec:
+      containers:
+      - name: app
+        image: anestesia01/k8s-demo:metrics-demo-1.0.0
+        ports:
+          - containerPort: {{ .Values.app.port }}
+        env:
+        - name: PG_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: DB_PASSWORD
+        - name: PG_USER
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: DB_USER
+        - name: PG_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: DB_NAME
+        - name: PG_HOST
+          value: {{ .Values.db.service }}
+

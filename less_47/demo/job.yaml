@@ -1,0 +1,17 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: migrator
+  namespace: job-demo
+spec:
+  template:
+    spec:
+      containers:
+      - name: migrator
+        image: anestesia01/k8s-demo:k8s-demo-job_2.0
+        command: ["python", "migrate.py"]
+        env:
+        - name: DATABASE_URL
+          value: "postgresql://postgres:password@postgres-service:5432/postgres"
+      restartPolicy: Never
+  backoffLimit: 3

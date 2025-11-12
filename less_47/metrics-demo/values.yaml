@@ -1,0 +1,16 @@
+namespace: metrics-demo
+name: metrics
+
+db:
+  user: metrics
+  password: metricspassword
+  name: metricsdb
+  image: postgres:15
+  port: 5432
+  service: metrics-db-service
+
+app:
+  image: anestesia01/k8s-demo:metrics-demo-1.0.0
+  repicas: 2
+  port: 5000
+

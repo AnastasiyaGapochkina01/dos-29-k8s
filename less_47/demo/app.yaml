@@ -2,20 +2,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: $APP
-  namespace: $NS
+  name: flask-deployment
+  namespace: job-demo
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: $APP
+      app: flask
   template:
     metadata:
       labels:
-        app: $APP
+        app: flask
     spec:
       containers:
-      - name: $APP
+      - name: flask
         image: anestesia01/k8s-demo:k8s-demo-job_2.0
         ports:
         - containerPort: 8000
@@ -27,11 +27,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: $APP-service
-  namespace: jobs-demo
+  name: flask-service
+  namespace: job-demo
 spec:
   selector:
-    app: $NS
+    app: flask
   ports:
     - protocol: TCP
       port: 80

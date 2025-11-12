@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: probes-demo
+  labels:
+    app: probes-demo
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: "20%"
+      maxUnavailable: "10%"
+  selector:
+    matchLabels:
+      env: probes-demo
+  template:
+    metadata:
+      labels:
+        env: probes-demo
+    spec:
+      containers:
+      - name: probes-demo
+        image: anestesia01/k8s-demo:probes-demo
+        ports:
+          - containerPort: 8080
+          - containerPort: 9000
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          failureThreshold: 3
+        livenessProbe:
+          exec:
+            command:
+              - pgrep
+              - worker
+          initialDelaySeconds: 15
+          periodSeconds: 10
+          failureThreshold: 5
+        startupProbe:
+          tcpSocket:
+            port: 8080
+          initialDelaySeconds: 0
+          periodSeconds: 10
+          failureThreshold: 5
