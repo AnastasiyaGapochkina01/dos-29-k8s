@@ -1,0 +1,39 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: $APP
+  namespace: $NS
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: $APP
+  template:
+    metadata:
+      labels:
+        app: $APP
+    spec:
+      containers:
+      - name: $APP
+        image: anestesia01/k8s-demo:k8s-demo-job_2.0
+        ports:
+        - containerPort: 8000
+        env:
+        - name: DATABASE_URL
+          value: "postgresql://postgres:password@postgres-service:5432/postgres"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: $APP-service
+  namespace: jobs-demo
+spec:
+  selector:
+    app: $NS
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000
+  type: ClusterIP
